@@ -74,25 +74,4 @@ export default class UsersController {
       accessToken: result.accessToken,
     });
   });
-
-  /** 캐시 충전 */
-  cashCharge = asyncHandler(async (req, res, next) => {
-    const joiSchema = joi.object({
-      cash: joi.number().required().messages({
-        'number.base': '충천 금액은 숫자타입이어야 합니다.',
-        'any.required': '충천 금액을 입력해주세요.',
-      }),
-    });
-
-    const validation = await joiSchema.validateAsync(req.body);
-    const { cash } = validation;
-    const { user } = req;
-
-    const result = await this.usersService.cashCharge(user.id, cash);
-
-    return res.status(StatusCodes.OK).json({
-      message: result.message,
-      accessToken: result.accessToken,
-    });
-  });
 }

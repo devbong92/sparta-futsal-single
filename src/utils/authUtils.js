@@ -2,9 +2,10 @@ import jwt from 'jsonwebtoken';
 import StatusError from '../errors/status.error.js';
 import { StatusCodes } from 'http-status-codes';
 
+/**
+ * 인증 관련 유틸
+ */
 export default class AuthUtils {
-  constructor() {}
-
   /**
    * JWT 복호화
    * @param {*} req.headers.authorization
