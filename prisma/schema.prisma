@@ -50,8 +50,8 @@ model usersPlayers {
   userPlayerId Int @id @default(autoincrement()) @map("user_player_id")
   userId Int @map("user_id")
   playerId Int @map("player_id")
-  level Int
-  isStarting Boolean @map("is_starting")
+  level Int @default(1)
+  isStarting Boolean @default(false) @map("is_starting")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 

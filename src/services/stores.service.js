@@ -45,8 +45,17 @@ export default class StoresService {
 
     const playerList = await prisma.players.findMany();
 
-    console.log(' =>>> ', playerList.length);
+    let randomVal = Math.floor(Math.random() * playerList.length);
+    const selectedPlayer = playerList[randomVal];
 
+    const userPlayers = await prisma.usersPlayers.create({
+      data: {
+        userId: user.id,
+        playerId: selectedPlayer.playerId,
+      },
+    });
+
+    result.message = `[${selectedPlayer.playerName}] 선수를 뽑았습니다.`;
     return result;
   }
 }

@@ -15,18 +15,17 @@ export default class TeamsController {
    */
   addStarting = asyncHandler(async (req, res, next) => {
     const joiSchema = joi.object({
-      playerId: joi.number().required().messages({
+      userPlayerId: joi.number().required().messages({
         'number.base': '플레이어 아이디는 숫자타입이어야 합니다.',
         'any.required': '플레이어 아이디를 입력해주세요.',
       }),
     });
 
     const validation = await joiSchema.validateAsync(req.body);
-    const { playerId } = validation;
+    const { userPlayerId } = validation;
+    const { user } = req;
 
-    //  test code
-    const userId = 1;
-    const result = await this.teamsService.addStarting(userId, playerId);
+    const result = await this.teamsService.addStarting(user.id, userPlayerId);
 
     return res.status(201).json({
       message: result.message,

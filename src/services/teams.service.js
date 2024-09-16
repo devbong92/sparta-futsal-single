@@ -7,19 +7,19 @@ export default class TeamsService {
    * 특정 선수를 선발선수로 등록한다.
    *
    * @param {number} userId 유저ID
-   * @param {number} playerId 플레이어ID
+   * @param {number} userPlayerId 유저-플레이어ID
    * @param {boolean} isStarting 선발여부
    * @returns
    */
-  async addStarting(userId, playerId) {
+  async addStarting(userId, userPlayerId) {
     const result = {};
     const MAX_STARTING_COUNT = 3;
 
     // 대상 선수 조회
     const targetPlayer = await prisma.usersPlayers.findFirst({
       where: {
-        playerId: playerId,
-        userId: userId,
+        userPlayerId,
+        userId,
       },
     });
 
@@ -45,6 +45,18 @@ export default class TeamsService {
         `선발선수는 최대 ${MAX_STARTING_COUNT}명까지만 등록 가능합니다.`,
         StatusCodes.BAD_REQUEST,
       );
+    }
+
+    // 선발 목록에 같은 선수가 있는 경우,
+    const samePlayer = await prisma.usersPlayers.findFirst({
+      where: {
+        userId: userId,
+        isStarting: true,
+        playerId: targetPlayer.playerId,
+      },
+    });
+    if (samePlayer) {
+      throw new StatusError(`선발목록에 동일한 선수가 포함되어있습니다.`, StatusCodes.BAD_REQUEST);
     }
 
     // 선발 여부 변경
