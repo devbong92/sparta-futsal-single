@@ -65,7 +65,7 @@ export default class TeamsService {
       },
     });
 
-    result.messages = `[${updatePlayer.user.nickname}]의 [${updatePlayer.player.playerName}] 선수를 선발선수로 등록하였습니다.`;
+    result.message = `[${updatePlayer.user.nickname}]의 [${updatePlayer.player.playerName}] 선수를 선발선수로 등록하였습니다.`;
     return result;
   }
 
@@ -112,7 +112,7 @@ export default class TeamsService {
       },
     });
 
-    result.messages = `[${updatePlayer.user.nickname}]의 [${updatePlayer.player.playerName}] 선수를 선발에서 해제하였습니다.`;
+    result.message = `[${updatePlayer.user.nickname}]의 [${updatePlayer.player.playerName}] 선수를 선발에서 해제하였습니다.`;
     return result;
   }
 }
