@@ -29,7 +29,7 @@ export default class TeamsController {
     const result = await this.teamsService.addStarting(userId, playerId);
 
     return res.status(201).json({
-      messages: result.messages,
+      message: result.message,
     });
   });
 
@@ -55,7 +55,7 @@ export default class TeamsController {
     const result = await this.teamsService.subtractStarting(userId, playerId);
 
     return res.status(201).json({
-      messages: result.messages,
+      message: result.message,
     });
   });
 }
