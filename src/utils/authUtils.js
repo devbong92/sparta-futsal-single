@@ -12,7 +12,9 @@ export default class AuthUtils {
    * @returns
    */
   static verify(authorization) {
-    if (authorization.split(' ').length < 2) {
+    if (!authorization) {
+      throw new StatusError('인증이 필요한 기능입니다.', StatusCodes.UNAUTHORIZED);
+    } else if (authorization.split(' ').length < 2) {
       throw new StatusError('잘못된 토큰값 입니다.', StatusCodes.UNAUTHORIZED);
     }
     const [tokenType, token] = authorization.split(' ');

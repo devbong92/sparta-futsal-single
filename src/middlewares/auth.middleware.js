@@ -12,9 +12,6 @@ import { StatusCodes } from 'http-status-codes';
  */
 export default async function (req, res, next) {
   try {
-    if (!req.headers.authorization) {
-      throw new StatusError('인증이 필요한 기능입니다.', StatusCodes.UNAUTHORIZED);
-    }
     const userId = AuthUtils.verify(req.headers.authorization);
     if (!userId) {
       throw new StatusError('로그인이 필요한 기능입니다.', StatusCodes.UNAUTHORIZED);
