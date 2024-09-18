@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 export default class StoresService {
   /**
    * 캐시 충전
-   * @param {String} userId
+   * @param {Number} userId
    * @param {Number} cash
    */
   async cashCharge(userId, cash) {

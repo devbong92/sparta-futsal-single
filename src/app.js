@@ -4,6 +4,7 @@ import errorMiddleware from './middlewares/error.middleware.js';
 import teamsRouter from './routes/teams.router.js';
 import usersRouter from './routes/users.router.js';
 import storesRouter from './routes/stores.router.js';
+import gamesRouter from './routes/games.router.js';
 
 // .env => process.env
 dotenv.config();
@@ -13,7 +14,7 @@ const PORT = 3001;
 
 app.use(express.json());
 
-app.use('/api', [teamsRouter, usersRouter, storesRouter]);
+app.use('/api', [teamsRouter, usersRouter, storesRouter, gamesRouter]);
 
 // 에러용 미들웨어
 app.use(errorMiddleware);

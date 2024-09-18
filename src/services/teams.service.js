@@ -77,7 +77,7 @@ export default class TeamsService {
       },
     });
 
-    result.message = `[${updatePlayer.user.nickname}]의 [${updatePlayer.player.playerName}] 선수를 선발선수로 등록하였습니다.`;
+    result.message = `[${updatePlayer.user.nickname}]가 [${updatePlayer.player.playerName}]선수를 선발선수로 등록하였습니다.`;
     return result;
   }
 
@@ -87,13 +87,13 @@ export default class TeamsService {
    * @param {*} userId
    * @param {*} playerId
    */
-  async subtractStarting(userId, playerId) {
+  async subtractStarting(userId, userPlayerId) {
     const result = {};
 
     // 대상 선수 조회
     const targetPlayer = await prisma.usersPlayers.findFirst({
       where: {
-        playerId: playerId,
+        userPlayerId: userPlayerId,
         userId: userId,
       },
     });
@@ -124,7 +124,75 @@ export default class TeamsService {
       },
     });
 
-    result.message = `[${updatePlayer.user.nickname}]의 [${updatePlayer.player.playerName}] 선수를 선발에서 해제하였습니다.`;
+    result.message = `[${updatePlayer.user.nickname}]가 [${updatePlayer.player.playerName}]선수를 선발에서 해제하였습니다.`;
+    return result;
+  }
+
+  /**
+   * 선발선수 목록 조회
+   * @param {Number} userId
+   * @returns
+   */
+  async getStating(userId) {
+    const result = {};
+
+    // 대상 선수 조회
+    const startingPlayers = await prisma.usersPlayers.findMany({
+      select: {
+        userPlayerId: true,
+        player: {
+          select: {
+            playerId: true,
+            playerName: true,
+            speed: true,
+            finishing: true,
+            shotPower: true,
+            defense: true,
+            stamina: true,
+          },
+        },
+      },
+      where: {
+        userId: userId,
+        isStarting: true,
+      },
+    });
+
+    result.data = startingPlayers;
+    return result;
+  }
+
+  /**
+   * 보유 선수 목록 조회
+   * @param {number} userId
+   * @returns
+   */
+  async getPlayers(userId) {
+    const result = {};
+
+    // 대상 선수 조회
+    const startingPlayers = await prisma.usersPlayers.findMany({
+      select: {
+        userPlayerId: true,
+        isStarting: true,
+        player: {
+          select: {
+            playerId: true,
+            playerName: true,
+            speed: true,
+            finishing: true,
+            shotPower: true,
+            defense: true,
+            stamina: true,
+          },
+        },
+      },
+      where: {
+        userId: userId,
+      },
+    });
+
+    result.data = startingPlayers;
     return result;
   }
 }

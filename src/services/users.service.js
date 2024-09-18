@@ -7,9 +7,9 @@ import jwt from 'jsonwebtoken';
 export default class UsersService {
   /**
    * 회원가입
-   * @param {String} email 이메일
-   * @param {String} password 비밀번호
-   * @param {String} nickname 닉네임
+   * @param {string} email 이메일
+   * @param {string} password 비밀번호
+   * @param {string} nickname 닉네임
    */
   async signUp(email, password, nickname) {
     const result = {};
@@ -33,6 +33,8 @@ export default class UsersService {
         nickname,
       },
     });
+
+    console.log('users =>>. ', user.id);
 
     result.message = '회원가입이 완료되었습니다.';
 
