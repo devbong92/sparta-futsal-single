@@ -84,16 +84,13 @@ export default class GamesService {
       // A 유저 승리 처리
       const aScore = Math.floor(Math.random() * 4) + 2; // 2에서 5 사이
       const bScore = Math.floor(Math.random() * Math.min(3, aScore)); // aScore보다 작은 값을 설정
-      result.msg = `A 유저 승리: A ${aScore} - ${bScore} B`;
+      result.message = `${playUser.nickname}의 승리 !! [${playUser.nickname} (${aScore}) : (${bScore}) ${otherUser.nickname}]`;
     } else {
       // B 유저 승리 처리
       const bScore = Math.floor(Math.random() * 4) + 2; // 2에서 5 사이
       const aScore = Math.floor(Math.random() * Math.min(3, bScore)); // bScore보다 작은 값을 설정
-      result.msg = `B 유저 승리: B ${bScore} - ${aScore} A`;
+      result.message = `${otherUser.nickname}의 승리 !! [${playUser.nickname} (${aScore}) : (${bScore}) ${otherUser.nickname}]`;
     }
-
-    console.log(result.msg);
-    result.message = `${playUser.nickname} VS ${otherUser.nickname}`;
     return result;
   }
 }
