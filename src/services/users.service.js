@@ -70,4 +70,29 @@ export default class UsersService {
     result.accessToken = accessToken;
     return result;
   }
+
+  /**
+   * 유저 랭킹 조회
+   * > userId 값 있으면 해당 유저의 +-${RANK_RANGE} 범위
+   * > userId 값 없으면 TOP100
+   * @param {number?} userId
+   */
+  async getRank(userId) {
+    const result = {};
+    const RANK_RANGE = 5; // 랭킹 범위
+
+    const user = await prisma.users.findFirst({ where: { id: userId } });
+
+    console.log('user---- >>> ', user, userId);
+
+    const rankArr = await prisma.users.findMany({ orderBy: { rating: 'desc' } });
+    if (!user) {
+      result.data = rankArr;
+    } else {
+      const idx = rankArr.findIndex((e) => e.id === userId);
+      result.data = rankArr.slice(Math.max(idx - RANK_RANGE, 0), idx + RANK_RANGE);
+    }
+
+    return result;
+  }
 }

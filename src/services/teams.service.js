@@ -130,8 +130,8 @@ export default class TeamsService {
 
   /**
    * 선발선수 목록 조회
-   * @param {Number} userId
-   * @returns
+   * @param {Number} userId 유저아이디
+   * @returns {Array} 선발목록
    */
   async getStating(userId) {
     const result = {};

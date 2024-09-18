@@ -74,4 +74,24 @@ export default class UsersController {
       accessToken: result.accessToken,
     });
   });
+
+  /** 유저 랭크 조회 */
+  getRank = asyncHandler(async (req, res, next) => {
+    const joiSchema = joi.object({
+      userId: joi.number().messages({
+        'number.base': '유저 아이디는 숫자타입이어야 합니다.',
+      }),
+    });
+
+    const validation = await joiSchema.validateAsync(req.body);
+    const { userId } = validation;
+
+    console.log('user ID =>> ', userId);
+    const result = await this.usersService.getRank(userId || 0);
+
+    return res.status(StatusCodes.OK).json({
+      message: result.message,
+      data: result.data,
+    });
+  });
 }
