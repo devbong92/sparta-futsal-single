@@ -85,13 +85,49 @@ export default class UsersService {
 
     console.log('user---- >>> ', user, userId);
 
-    const rankArr = await prisma.users.findMany({ orderBy: { rating: 'desc' } });
-    if (!user) {
-      result.data = rankArr;
-    } else {
-      const idx = rankArr.findIndex((e) => e.id === userId);
-      result.data = rankArr.slice(Math.max(idx - RANK_RANGE, 0), idx + RANK_RANGE);
-    }
+    const res = await prisma.$queryRaw`
+    select
+            dense_rank() over (order by  u.rating desc) as ranking,
+            u.id , u.nickname, u.rating,
+            max(if(s.game_result='승리', s.result_cnt, 0)) as win_cnt,
+            max(if(s.game_result='무승부', s.result_cnt, 0)) as draw_cnt,
+            max(if(s.game_result='패배', s.result_cnt, 0)) as lose_cnt
+      from (
+             select 
+                   play_user_id, game_result, count(*) as result_cnt
+              from game_result_logs grl 
+          group by play_user_id, game_result
+          ) s
+      right outer join users u 
+                    on s.play_user_id = u.id 
+              group by s.play_user_id, u.nickname, u.rating
+              order by u.rating desc
+    `;
+    console.log('res =>>', res);
+
+    const rankArr = await prisma.users.findMany({
+      select: {
+        id: true,
+        nickname: true,
+        rating: true,
+        _count: {
+          select: {
+            playUserResultLogs: {
+              where: { gameResult: '승리' },
+            },
+          },
+        },
+      },
+      orderBy: { rating: 'desc' },
+    });
+
+    // 이게 맞나...
+    result.data = JSON.parse(
+      JSON.stringify(
+        res,
+        (key, value) => (typeof value === 'bigint' ? +value.toString() : value), // return everything else unchanged
+      ),
+    );
 
     return result;
   }

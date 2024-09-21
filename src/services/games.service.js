@@ -99,14 +99,36 @@ export default class GamesService {
       }
     }
 
-    await prisma.gameResultLogs.create({
-      data: {
-        playUserId: playUser.id,
-        otherUserId: otherUser.id,
-        playUserPoint: playerScore,
-        otherUserPoint: otherScore,
-        gameResult,
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.gameResultLogs.create({
+        data: {
+          playUserId: playUser.id,
+          otherUserId: otherUser.id,
+          playUserPoint: playerScore,
+          otherUserPoint: otherScore,
+          gameResult,
+        },
+      });
+
+      // 게임 점수 조정 기능
+      let changeRating = 0;
+      switch (gameResult) {
+        case '승리':
+          changeRating = 10;
+          break;
+        case '패배':
+          changeRating = -10;
+          break;
+      }
+
+      await tx.users.update({
+        data: {
+          rating: playUser.rating + changeRating,
+        },
+        where: {
+          id: playUser.id,
+        },
+      });
     });
 
     return result;
