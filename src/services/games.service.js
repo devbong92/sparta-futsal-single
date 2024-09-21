@@ -76,21 +76,39 @@ export default class GamesService {
     const otherStartings = await this.teamsService.getStating(otherUser.id);
     const otherPoint = this.getPlayersPoint(otherStartings.data);
 
-    // 최대 점수는 두 팀의 총 점수의 합으로 하시면 됩니다!
-    const maxScore = playerPoint + otherPoint;
+    let playerScore = 0;
+    let otherScore = 0;
+    let gameResult = '';
 
-    const randomValue = Math.random() * maxScore;
+    const randomValue = Math.random() * (playerPoint + otherPoint);
     if (randomValue < playerPoint) {
-      // A 유저 승리 처리
-      const aScore = Math.floor(Math.random() * 4) + 2; // 2에서 5 사이
-      const bScore = Math.floor(Math.random() * Math.min(3, aScore)); // aScore보다 작은 값을 설정
-      result.message = `${playUser.nickname}의 승리 !! [${playUser.nickname} (${aScore}) : (${bScore}) ${otherUser.nickname}]`;
+      // 플레이 유저 승리 처리
+      playerScore = Math.floor(Math.random() * 4) + 2; // 2에서 5 사이
+      otherScore = Math.floor(Math.random() * Math.min(3, playerScore + 1));
+      result.message = `${playUser.nickname}의 승리 !! [${playUser.nickname} (${playerScore}) : (${otherScore}) ${otherUser.nickname}]`;
+      gameResult = '승리';
     } else {
-      // B 유저 승리 처리
-      const bScore = Math.floor(Math.random() * 4) + 2; // 2에서 5 사이
-      const aScore = Math.floor(Math.random() * Math.min(3, bScore)); // bScore보다 작은 값을 설정
-      result.message = `${otherUser.nickname}의 승리 !! [${playUser.nickname} (${aScore}) : (${bScore}) ${otherUser.nickname}]`;
+      // 상대 유저 승리 처리
+      otherScore = Math.floor(Math.random() * 4) + 2; // 2에서 5 사이
+      playerScore = Math.floor(Math.random() * Math.min(3, otherScore + 1));
+      result.message = `${otherUser.nickname}의 승리 !! [${playUser.nickname} (${playerScore}) : (${otherScore}) ${otherUser.nickname}]`;
+      if (otherScore === playerScore) {
+        gameResult = '무승부';
+      } else {
+        gameResult = '패배';
+      }
     }
+
+    await prisma.gameResultLogs.create({
+      data: {
+        playUserId: playUser.id,
+        otherUserId: otherUser.id,
+        playUserPoint: playerScore,
+        otherUserPoint: otherScore,
+        gameResult,
+      },
+    });
+
     return result;
   }
 }
