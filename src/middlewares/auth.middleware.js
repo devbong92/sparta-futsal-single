@@ -3,6 +3,8 @@ import AuthUtils from '../utils/authUtils.js';
 import StatusError from '../errors/status.error.js';
 import { StatusCodes } from 'http-status-codes';
 
+import { logger } from '../../config/winston.js';
+
 /**
  * 인증 핸들러
  * @param {*} req
@@ -24,6 +26,7 @@ export default async function (req, res, next) {
       throw new StatusError('사용자가 존재하지 않습니다.', StatusCodes.UNAUTHORIZED);
     }
 
+    logger.info(' auth.middleware => ', user);
     req.user = user;
 
     next();

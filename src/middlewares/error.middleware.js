@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { logger } from '../../config/winston.js';
 
 /**
  * 에러 핸들러
@@ -8,7 +9,7 @@ import { StatusCodes } from 'http-status-codes';
  * @param {*} next
  */
 export default function (err, req, res, next) {
-  console.error('[ERROR *] =>> ', err);
+  logger.error('[ ERR.MIDDLEWARE ] => ', err);
 
   // JOI
   if (err.name === 'ValidationError') {

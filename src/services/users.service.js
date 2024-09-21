@@ -81,9 +81,7 @@ export default class UsersService {
     const result = {};
     const RANK_RANGE = 5; // 랭킹 범위
 
-    const user = await prisma.users.findFirst({ where: { id: userId } });
-
-    console.log('user---- >>> ', user, userId);
+    // const user = await prisma.users.findFirst({ where: { id: userId } });
 
     const res = await prisma.$queryRaw`
     select
@@ -103,7 +101,6 @@ export default class UsersService {
               group by s.play_user_id, u.nickname, u.rating
               order by u.rating desc
     `;
-    console.log('res =>>', res);
 
     const rankArr = await prisma.users.findMany({
       select: {
