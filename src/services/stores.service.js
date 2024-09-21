@@ -36,11 +36,17 @@ export default class StoresService {
    */
   async playerGacha(userId) {
     const result = {};
+    const cost = 1000;
 
     const user = await prisma.users.findFirst({ where: { id: userId } });
 
     if (!user) {
       throw new StatusError('잘못된 유저 정보 입니다.', StatusCodes.BAD_REQUEST);
+    } else if (user.cash < cost) {
+      throw new StatusError(
+        `${cost} 캐시가 필요합니다. - 보유중인 캐시 : ${user.cash}`,
+        StatusCodes.BAD_REQUEST,
+      );
     }
 
     const playerList = await prisma.players.findMany();
@@ -48,11 +54,20 @@ export default class StoresService {
     let randomVal = Math.floor(Math.random() * playerList.length);
     const selectedPlayer = playerList[randomVal];
 
-    const userPlayers = await prisma.usersPlayers.create({
-      data: {
-        userId: user.id,
-        playerId: selectedPlayer.playerId,
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.users.update({
+        data: {
+          cash: user.cash - cost,
+        },
+        where: { id: userId },
+      });
+
+      const userPlayers = await tx.usersPlayers.create({
+        data: {
+          userId: user.id,
+          playerId: selectedPlayer.playerId,
+        },
+      });
     });
 
     result.message = `[${selectedPlayer.playerName}] 선수를 뽑았습니다.`;

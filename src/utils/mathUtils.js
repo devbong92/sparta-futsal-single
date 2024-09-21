@@ -1,1 +1,3 @@
-export default class MathUtils {}
+export default class MathUtils {
+  //
+}
