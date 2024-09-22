@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { logger } from '../../config/winston.js';
+import { logger } from '../../config/winston.config.js';
 
 /**
  * 에러 핸들러

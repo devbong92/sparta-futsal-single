@@ -3,7 +3,7 @@ import AuthUtils from '../utils/authUtils.js';
 import StatusError from '../errors/status.error.js';
 import { StatusCodes } from 'http-status-codes';
 
-import { logger } from '../../config/winston.js';
+import { logger } from '../../config/winston.config.js';
 
 /**
  * 인증 핸들러
