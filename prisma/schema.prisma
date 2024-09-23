@@ -28,6 +28,7 @@ model users {
   usersPlayers usersPlayers[]
   playUserResultLogs gameResultLogs[] @relation(name: "playUser")
   otherUserResultLogs gameResultLogs[] @relation(name: "otherUser")
+  rankHistory rankHistory[] 
 }
 
 // 선수 
@@ -63,7 +64,7 @@ model usersPlayers {
 
 // 경기 이력 테이블 
 model gameResultLogs {
-  game_results_id Int @id @default(autoincrement()) 
+  gameResultsId Int @id @default(autoincrement()) @map("game_results_id")
   playUserId Int @map("play_user_id")
   otherUserId Int @map("other_userId")
   playUserPoint Int @map("play_user_point")
@@ -76,4 +77,27 @@ model gameResultLogs {
   otherUser users @relation(name: "otherUser", fields: [otherUserId], references: [id], onDelete: Cascade)
 
   @@map("game_result_logs")
+}
+
+
+// 랭킹 이력 테이블 
+model rankHistory {
+  rankHistId Int @id @default(autoincrement()) @map("rank_hist_id")
+  calcDate String @map("calc_date")
+  userId Int @map("user_id")
+  userNickname String @map("user_nickname")
+  winCount Int @map("win_count")
+  drawCount Int @map("draw_count")
+  loseCount Int @map("lose_count")
+  rating Int 
+  ranking Int
+  rankingChange Int @map("ranking_change")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([calcDate,userId])
+  @@map("rank_history")
 }

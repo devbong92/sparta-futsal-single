@@ -102,23 +102,23 @@ export default class UsersService {
               order by u.rating desc
     `;
 
-    const rankArr = await prisma.users.findMany({
-      select: {
-        id: true,
-        nickname: true,
-        rating: true,
-        _count: {
-          select: {
-            playUserResultLogs: {
-              where: { gameResult: '승리' },
-            },
-          },
-        },
-      },
-      orderBy: { rating: 'desc' },
-    });
+    // const rankArr = await prisma.users.findMany({
+    //   select: {
+    //     id: true,
+    //     nickname: true,
+    //     rating: true,
+    //     _count: {
+    //       select: {
+    //         playUserResultLogs: {
+    //           where: { gameResult: '승리' },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   orderBy: { rating: 'desc' },
+    // });
 
-    // 이게 맞나...
+    // bigint의 n제거 및 json타입 파싱
     result.data = JSON.parse(
       JSON.stringify(
         res,

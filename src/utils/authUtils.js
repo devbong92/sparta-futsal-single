@@ -25,7 +25,6 @@ export default class AuthUtils {
       const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY);
       return decodedToken.userId;
     } catch (err) {
-      console.log('errr =>> ', err);
       if (err.name === 'TokenExpiredError') {
         throw new StatusError('토큰의 유효기간이 지났습니다.', StatusCodes.UNAUTHORIZED);
       }

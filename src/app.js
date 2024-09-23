@@ -5,6 +5,7 @@ import teamsRouter from './routes/teams.router.js';
 import usersRouter from './routes/users.router.js';
 import storesRouter from './routes/stores.router.js';
 import gamesRouter from './routes/games.router.js';
+import ScheduleController from './controllers/schedule.controller.js';
 
 // .env => process.env
 dotenv.config();
@@ -21,4 +22,8 @@ app.use(errorMiddleware);
 
 app.listen(PORT, () => {
   console.log(PORT, '포트로 서버가 열렸어요!');
+
+  const scheduleController = new ScheduleController();
+
+  scheduleController.createRankHistory();
 });
