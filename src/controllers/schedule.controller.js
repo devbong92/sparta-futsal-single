@@ -11,7 +11,7 @@ export default class ScheduleController {
   createRankHistory = asyncHandler(async () => {
     logger.info(' ScheduleController() START ');
     /* 
-    + cron 형식 
+    + cron 형식 - UTC 
     second(0-59)
     minute(0-59)
     hour(0-23)
@@ -21,7 +21,7 @@ export default class ScheduleController {
   */
 
     // 매일 01시 반복
-    schedule.scheduleJob('* * 1 * * *', async () => {
+    schedule.scheduleJob('0 0 1 * * *', async () => {
       console.log('====>>>> ');
       const result = await this.scheduleService.createRankHistory();
     });
